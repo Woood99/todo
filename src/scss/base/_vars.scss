@@ -1,0 +1,33 @@
+@import './$vars';
+
+:root {
+    // settings
+    --min-width: 320px;
+
+    --content-width: 1200px;
+    --container-padding: 15px;
+    --container-width: calc(var(--content-width) + (var(--container-padding) * 2));
+
+    // font
+    --font-family: "fontFamily";
+    --default-fz: 16px;
+
+    // color main
+    --page-bg: #fff;
+	--text-color: #000;
+
+    // color other
+    --black: #000;
+    --white: #fff;
+    --red: #e01717;
+    --blue: #80a7ff;
+    --blue-dark: #005bff;
+    --dark: #242424;
+}
+
+// ============================================================
+
+.dark-theme {
+    --page-bg: #252526;
+    --text-color: #fff;
+}

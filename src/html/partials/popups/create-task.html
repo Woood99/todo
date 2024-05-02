@@ -1,0 +1,70 @@
+<div class="modal _center" data-modal-target="create-task">
+    <div class="modal__container">
+        <button type="button" class="btn btn-reset modal__close js-modal-close">
+            <svg>
+                <use xlink:href="./img/sprite.svg#close"></use>
+            </svg>
+        </button>
+        <div class="modal__content">
+            <form action="#" class="create-task">
+                <label class="input-primary">
+                    <input type="text" name="Имя" class="input-reset input-primary__input" data-field-name placeholder="Название">
+                </label>
+                <label class="input-primary date-picker mt-2">
+                    <input type="text" name="Имя" class="input-reset input-primary__input date-picker__input" data-field-date placeholder="Дата">
+                </label>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                    <label class="checkbox">
+                        <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='today'>
+                        <div class="checkbox__checkmark">
+                            <svg>
+                                <use xlink:href="./img/sprite.svg#check"></use>
+                            </svg>
+                        </div>
+                        <span class="checkbox__content">
+                            Сегодня
+                        </span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='year'>
+                        <div class="checkbox__checkmark">
+                            <svg>
+                                <use xlink:href="./img/sprite.svg#check"></use>
+                            </svg>
+                        </div>
+                        <span class="checkbox__content">
+                            Год
+                        </span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='tomorrow'>
+                        <div class="checkbox__checkmark">
+                            <svg>
+                                <use xlink:href="./img/sprite.svg#check"></use>
+                            </svg>
+                        </div>
+                        <span class="checkbox__content">
+                            Завтра
+                        </span>
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='all'>
+                        <div class="checkbox__checkmark">
+                            <svg>
+                                <use xlink:href="./img/sprite.svg#check"></use>
+                            </svg>
+                        </div>
+                        <span class="checkbox__content">
+                            Без ограничений
+                        </span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-reset btn-primary w-full mt-8">
+                    <span class="btn-primary__text">
+                        Сохранить
+                    </span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

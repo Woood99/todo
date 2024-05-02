@@ -1,0 +1,23 @@
+@use "sass:math";
+
+
+
+@import "./base/vars";
+@import "./base/mixins";
+@import "./base/fonts";
+@import "./base/null";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "./base/general";
+@import "./ui-kit/forms";
+
+@import './ui-kit/tabs';
+
+
+
+.air-datepicker-global-container{
+    z-index: 1000;
+}

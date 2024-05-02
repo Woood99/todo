@@ -1,0 +1,39 @@
+.tabs {
+    &__nav {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &__button {
+        padding: 6px;
+        &._active{
+          color: var(--blue);
+        }
+    }
+    &__line{
+        position: absolute;
+	left: 0;
+	bottom: 12px;
+	width: 20px;
+	height: 2px;
+    background-color: var(--blue);
+    transition: left $transitionSpeed $transitionFunction,
+    width $transitionSpeed $transitionFunction;
+    }
+    &__content {
+        margin-top: 24px;
+    }
+    &__panel{
+        .loader{
+            margin-top: 40px;
+        }
+    }
+    &._loader,&._stub{
+        width: max-content;
+        .tabs__panel{
+            text-align: center;
+        }
+    }
+}

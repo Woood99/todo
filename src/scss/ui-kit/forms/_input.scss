@@ -1,0 +1,52 @@
+.input-reset {
+    -webkit-appearance: none;
+    appearance: none;
+    border-radius: 0;
+    background-color: #fff;
+    padding: 0;
+    border: 1px solid green;
+
+    &::-webkit-search-decoration,
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-results-button,
+    &::-webkit-search-results-decoration {
+        display: none;
+    }
+
+    &:focus {
+        outline: none;
+    }
+    &[type="number"]::-webkit-outer-spin-button,
+    &[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none; // Yeah, yeah everybody write about it
+    }
+
+    &[type='number'],
+    &[type="number"]:hover,
+    &[type="number"]:focus {
+        appearance: none;
+        -moz-appearance: textfield;
+    }
+}
+
+textarea.input-reset {
+    resize: none;
+}
+
+
+.input-primary{
+    height: 45px;
+    display: block;
+    &__input{
+        height: 100%;
+        width: 100%;
+        display: block;
+        padding: 0 16px;
+        border-radius: 12px;
+         @apply border-blue-300;
+         &:disabled{
+            opacity: 0.5;
+            pointer-events: none;
+         }
+    }
+}
