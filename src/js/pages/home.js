@@ -207,12 +207,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             `;
-            const modal = new dynamicModal(modalContentHTML, '.edit-task',{
+            const modal = new dynamicModal(modalContentHTML, '.edit-task', {
                 isOpen(modal) {
                     console.log(modal);
                 }
             });
-           
+
         }
 
 
@@ -268,11 +268,9 @@ document.addEventListener('DOMContentLoaded', () => {
         async createTask(data) {
             new Loader(this.createTaskEl).createWithWrapper()
             await this.actionTasks.createTask(data);
-            setTimeout(() => {
-                new Loader(this.createTaskEl).hide()
-                modalContainer.modal.close('create-task');
-                this.changed();
-            }, 250);
+            new Loader(this.createTaskEl).hide()
+            modalContainer.modal.close('create-task');
+            this.changed();
         }
 
         getContainerFromInput(el) {
@@ -280,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         deleteTooltips() {
-            document.querySelectorAll('.tooltip-html').forEach(item => item.remove());       
+            document.querySelectorAll('.tooltip-html').forEach(item => item.remove());
         }
 
     }
