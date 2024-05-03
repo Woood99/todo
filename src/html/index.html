@@ -11,18 +11,18 @@
 
 <body class="page__body">
     <div class="site-container">
-        <main class="main py-10">
+        <main class="main py-10 md1:py-6">
             <section>
                 <div class="container">
-                    <div class='flex justify-between gap-10'>
-                        <h1 class='text-5xl'>Задачи</h1>
+                    <div class='flex justify-between gap-10 md1:flex-col-reverse md1:gap-5'>
+                        <h1 class='text-5xl md1:text-3xl'>Задачи</h1>
                         <button type='button' class='btn btn-reset ml-auto btn-primary' data-modal-path="create-task">
                             <span class="btn-primary__text">
                                 Добавить задачу
                             </span>
                         </button>
                     </div>
-                    <div class="tabs mt-8" data-todo-tabs data-tabs data-tabs-one data-tabs-animation='fade'>
+                    <div class="tabs mt-8 md1:mt-5" data-todo-tabs data-tabs data-tabs-one data-tabs-animation='fade'>
                         <nav data-tabs-buttons class="tabs__nav pb-4">
                             <button type="button" class="btn btn-reset tabs__button _active" data-tab-name="today">
                                 На сегодня

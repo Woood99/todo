@@ -20,7 +20,7 @@ export function getTomorrowDay(date) {
     return new Date(startDate.getTime() + day);
 }
 
-export function getFormatDate(currentDate) {
+export function getFormatDate(currentDate, format = 'default') {
     if (currentDate.length < 12) {
         currentDate = new Date(convertDateFromDDMM(currentDate));
     }
@@ -40,11 +40,20 @@ export function getFormatDate(currentDate) {
         months2: ['Января', 'Февраля', 'Марта', 'Апреля', 'Мая', 'Июня', 'Июля', 'Августа', 'Сентября', 'Октября', 'Ноября', 'Декабря'],
     };
     const date = new Date(newDate.setDate(newDate.getDate()));
-    return `
+    const year = getCurrentYear();
+    if (format === 'default') {
+        return `
         ${maps.daysOfWeek[date.getDay()]}
         ${date.getDate()}
         ${maps.months2[maps.months.indexOf(maps.months[date.getMonth()])].toLowerCase()}
     `;
+    }
+    if (format === 'mm,yyyy') {
+        return `
+        ${maps.months[date.getMonth()].toLowerCase()}
+        ${year}
+    `;
+    }
 }
 
 
@@ -71,6 +80,7 @@ export function isDateInCurrentMonth(date) {
 
     return currentMonth === dateMonth && currentYear === dateYear;
 }
+
 export function isDateInCurrentYear(date) {
     const currentYear = new Date().getFullYear();
 
@@ -88,3 +98,8 @@ export function getEndtOfWeek() {
     const now = new Date();
     return new Date(now.setDate(now.getDate() - now.getDay() + 7));
 }
+
+export function getCurrentYear() {
+    return new Date().getFullYear();
+}
+

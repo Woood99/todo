@@ -1,4 +1,18 @@
-import { getTomorrowDay, getCurrentDateString, getFormatDate, isDateInCurrentWeek, convertDateFromDDMM, isDateInCurrentMonth, isDateInCurrentYear,getStartOfWeek,getEndtOfWeek } from "../modules/date.js";
+import {
+    getTomorrowDay,
+    getCurrentDateString,
+    getFormatDate,
+    isDateInCurrentWeek,
+    convertDateFromDDMM,
+    isDateInCurrentMonth,
+    isDateInCurrentYear,
+    getStartOfWeek,
+    getEndtOfWeek,
+    getCurrentYear
+} from "../modules/date.js";
+
+import dynamicModal from "../modules/dynamicModal.js";
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const modalContainer = document.querySelector('.modal-container');
@@ -20,34 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
                 'other': 'Задач нет!',
                 'all': 'Задач нет!',
             };
-            this.titleTab = {
-                'today': 'Задачи на сегодня',
-                'tomorrow': 'Задачи на завтра',
-                'week': 'Задачи на эту неделю',
-                'month': 'Задачи на этот месяц',
-                'year': 'Задачи на этот год',
-                'other': 'Задачи без даты',
-                'all': 'Все задачи',
-            };
         }
 
         init() {
             this.changed();
             this.tabsEl.addEventListener('tabChange', this.changed.bind(this));
             this.newTask();
+            this.tabsEl.addEventListener('click', this.deleteTask.bind(this));
+            this.tabsEl.addEventListener('click', this.editTask.bind(this));
         }
 
 
-        async changed() {
+        async changed(loaderCreate = true) {
             const todoActiveTab = this.tabs.activeTab;
             const todoPanel = this.tabs.activePanel;
 
-            todoPanel.innerHTML = '';
-            new Loader(todoPanel).create()
+            if (loaderCreate) {
+                todoPanel.innerHTML = '';
+                new Loader(todoPanel).create()
+            }
             this.tabsEl.classList.add('_loader');
             this.tabsEl.classList.add('_stub');
 
-            const data = await this.actionTasks.fetchPosts();
+            const data = await this.actionTasks.fetchTasks();
             new Loader(todoPanel).hide();
 
             const nameTab = todoActiveTab.dataset.tabName;
@@ -76,10 +85,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     `;
                 }
             }
-            if (nameTab === 'month') newData.data = sortByMonth(data);
-            if (nameTab === 'year') newData.data = sortByYear(data);
-            if (nameTab === 'other') newData.data = sortByOther(data);
-            if (nameTab === 'all') newData.data = allTasks(data);
+            if (nameTab === 'month') {
+                newData.data = sortByMonth(data);
+                if (newData.data.length > 0) {
+                    newData.title = `Задачи на месяц 
+                    <span class="text-sm text-gray-400">${getFormatDate(new Date(),'mm,yyyy')}<span>
+                    `;
+                }
+            }
+            if (nameTab === 'year') {
+                newData.data = sortByYear(data);
+                if (newData.data.length > 0) {
+                    newData.title = `Задачи на год 
+                    <span class="text-sm text-gray-400">${getCurrentYear()}<span>
+                    `;
+                }
+            }
+            if (nameTab === 'other') {
+                newData.data = sortByOther(data);
+                if (newData.data.length > 0) {
+                    newData.title = `Задачи без конкретной даты`;
+                }
+            }
+            if (nameTab === 'all') {
+                newData.data = allTasks(data);
+                if (newData.data.length > 0) {
+                    newData.title = `Все задачи`;
+                }
+            }
 
 
             this.tabsEl.classList.remove('_loader');
@@ -108,12 +141,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = currentData.data;
                 const html = data.map(item => {
                     return `
-                    <article class="bg-white rounded-2xl flex justify-between gap-16 text-black py-6 px-8">
-                        <div class="flex flex-col gap-4">
-                            <p>${item.name || 'Без названия'}</p>
-                            ${!item.other ? `<time class="text-md">${getFormatDate(item.date)}</time>` : ''}
+                    <article class="bg-white rounded-2xl flex flex-col text-black py-6 px-8" data-card-id="${item.id}">
+                        <div class="flex gap-4 items-center justify-between pb-4 mb-6 border-gray-200 border-b md1:flex-col md1:items-start md1:gap-3 md1:mb-4">
+                            <p class="font-medium">${item.name}</p>
+                            <div class="flex items-center gap-5">
+                                ${item.date ? `<time class="text-md whitespace-nowrap">${getFormatDate(item.date)}</time>` : '<span></span>'}
+                                ${item.date ? `<time class="text-xs text-gray-400 whitespace-nowrap">${item.date}</time>` : ''}
+                            </div>
                         </div>
-                        ${!item.other ? `<time class="text-xs text-gray-400">${item.date}</time>` : ''}
+                        <div class="flex items-center justify-between md1:flex-col md1:items-start md1:gap-4">
+                            <div class="flex-grow max-w-[80%] text-gray-500 whitespace-pre-wrap md1:max-w-full">${item.descr}</div>
+                            <div class="flex items-center gap-4 self-end">
+                                <button type="button" data-tooltip-html="Редактировать задачу" data-tooltip-desktop data-button-edit-task>
+                                    <svg class="w-6 h-6 pointer-events-none" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill="none"><path d="m104.175 90.97-4.252 38.384 38.383-4.252L247.923 15.427V2.497L226.78-18.646h-12.93zm98.164-96.96 31.671 31.67" class="cls-1" style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#5478e6;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" transform="translate(-77.923 40.646)"/><path d="m195.656 33.271-52.882 52.882" style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#5478e6;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5;   stroke-dasharray:none;stroke-opacity:1" transform="translate(-77.923 40.646)"/></svg>                     
+                                </button>
+                                <button type="button" data-tooltip-html="Удалить задачу" data-tooltip-desktop data-button-delete-task>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="w-6 h-6 pointer-events-none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                    </svg>                          
+                                </button>
+                            </div>
+                        </div>
                     </article>
                 `;
                 })
@@ -125,6 +173,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
         }
 
+        async deleteTask(e) {
+            const target = e.target;
+            const button = target.closest('[data-button-delete-task]');
+            if (!button) return;
+            this.deleteTooltips();
+            this.tabs.activePanel.innerHTML = '';
+            this.tabsEl.classList.add('_loader');
+            new Loader(this.tabs.activePanel).create();
+
+            const currentID = button.closest('[data-card-id]').dataset.cardId;
+            await this.actionTasks.deleteTask(currentID);
+            this.changed(false);
+        }
+
+        async editTask(e) {
+            const target = e.target;
+            const button = target.closest('[data-button-edit-task]');
+            if (!button) return;
+            this.deleteTooltips();
+
+            const modalContentHTML = `
+            <div class="modal edit-task _center">
+                <div class="modal__container edit-task__container">
+                    <button type="button" class="btn btn-reset modal__close edit-task__close js-modal-close">
+                        <svg>
+                            <use xlink:href="./img/sprite.svg#close"></use>
+                        </svg>
+                    </button>
+                    <div class="modal__content edit-task__content">
+                        123
+                    </div>
+                </div>
+            </div>
+            `;
+            const modal = new dynamicModal(modalContentHTML, '.edit-task',{
+                isOpen(modal) {
+                    console.log(modal);
+                }
+            });
+           
+        }
+
 
 
         newTask() {
@@ -132,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkboxes = form.querySelectorAll('[data-checkbox-date]');
             const date = form.querySelector('[data-field-date]');
             const name = form.querySelector('[data-field-name]');
+            const descr = form.querySelector('[data-field-descr]');
 
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', checkboxHandler);
@@ -140,6 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             function checkboxHandler() {
                 const name = this.dataset.checkboxDate;
+
                 checkboxes.forEach(checkbox => {
                     if (this !== checkbox) checkbox.checked = false;
                 });
@@ -154,7 +246,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         date.datePicker.selectDate(getTomorrowDay(new Date()));
                     }
                     if (name === 'year') {
-                        date.datePicker.selectDate(`01.01.${new Date().getFullYear() + 1}`);
+                        const lastDayOfYear = new Date(new Date().getFullYear(), 11, 31);
+                        date.datePicker.selectDate(lastDayOfYear);
                     }
                 } else {
                     date.removeAttribute('disabled');
@@ -164,8 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const data = {
-                    name: name.value,
-                    date: date.value
+                    name: name.value || 'Без названия',
+                    descr: descr.value || '',
+                    date: date.value || null
                 }
                 this.createTask(data);
             })
@@ -183,6 +277,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         getContainerFromInput(el) {
             return el.closest('.input-primary');
+        }
+
+        deleteTooltips() {
+            document.querySelectorAll('.tooltip-html').forEach(item => item.remove());       
         }
 
     }
@@ -207,7 +305,8 @@ class ActionTasks {
             console.log(error);
         }
     }
-    async fetchPosts() {
+
+    async fetchTasks() {
         try {
             const request = new Request(`${this.url}/tasks.json`, {
                 method: 'get'
@@ -218,6 +317,16 @@ class ActionTasks {
         }
     }
 
+    async deleteTask(id) {
+        try {
+            const request = new Request(`${this.url}/tasks/${id}.json`, {
+                method: 'DELETE'
+            });
+            return this.useRequest(request);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async useRequest(request) {
         const response = await fetch(request)
@@ -260,6 +369,7 @@ function sortByToday(data) {
     const result = [];
     for (const item in data) {
         if (data[item].date === currentDate) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -271,6 +381,7 @@ function sortByTomorrow(data) {
     const result = [];
     for (const item in data) {
         if (data[item].date === currentDate) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -280,8 +391,8 @@ function sortByTomorrow(data) {
 function sortByOther(data) {
     const result = [];
     for (const item in data) {
-        if (data[item].date === '') {
-            data[item].other = true;
+        if (!data[item].date) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -292,6 +403,7 @@ function sortByWeek(data) {
     const result = [];
     for (const item in data) {
         if (isDateInCurrentWeek(new Date(convertDateFromDDMM(data[item].date)))) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -302,6 +414,7 @@ function sortByMonth(data) {
     const result = [];
     for (const item in data) {
         if (isDateInCurrentMonth(new Date(convertDateFromDDMM(data[item].date)))) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -312,6 +425,7 @@ function sortByYear(data) {
     const result = [];
     for (const item in data) {
         if (isDateInCurrentYear(new Date(convertDateFromDDMM(data[item].date)))) {
+            data[item].id = item;
             result.push(data[item]);
         }
     }
@@ -323,6 +437,7 @@ function sortByYear(data) {
 function allTasks(data) {
     const result = [];
     for (const item in data) {
+        data[item].id = item;
         result.push(data[item]);
     }
     return result;

@@ -4,35 +4,58 @@
         display: flex;
         align-items: center;
         gap: 16px;
+        overflow-x: auto;
+        @include hiddenScroll;
+        @media (max-width:$desktop){
+             gap: 24px; 
+        }
+        @media (max-width:$smallTablet-max){
+             gap: 16px; 
+        }
     }
 
     &__button {
         padding: 6px;
-        &._active{
-          color: var(--blue);
+        white-space: nowrap;
+        &._active {
+            color: var(--blue);
+        }
+        @media (max-width:$desktop){
+             padding: 6px 12px; 
+        }
+        @media (max-width:$smallTablet-max){
+             padding: 6px; 
         }
     }
-    &__line{
+
+    &__line {
         position: absolute;
-	left: 0;
-	bottom: 12px;
-	width: 20px;
-	height: 2px;
-    background-color: var(--blue);
-    transition: left $transitionSpeed $transitionFunction,
-    width $transitionSpeed $transitionFunction;
+        left: 0;
+        bottom: 12px;
+        width: 20px;
+        height: 2px;
+        background-color: var(--blue);
+        transition: left $transitionSpeed $transitionFunction,
+            width $transitionSpeed $transitionFunction;
     }
+
     &__content {
         margin-top: 24px;
     }
-    &__panel{
-        .loader{
+
+    &__panel {
+        .loader {
             margin-top: 40px;
         }
     }
-    &._loader,&._stub{
-        width: max-content;
-        .tabs__panel{
+
+    &._loader,
+    &._stub {
+        @media (min-width:$desktop-min){
+            width: max-content; 
+        }
+
+        .tabs__panel {
             text-align: center;
         }
     }
