@@ -12,7 +12,8 @@ import {
 } from "../modules/date.js";
 
 import dynamicModal from "../modules/dynamicModal.js";
-import datePicker from '../modules/datePicker.js'
+import datePicker from '../modules/datePicker.js';
+import { textareaPrimary } from "../modules/textarea.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     class Todo {
@@ -38,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             this.changed();
             this.tabsEl.addEventListener('tabChange', this.changed.bind(this));
             this.tabsEl.addEventListener('click', this.deleteTask.bind(this));
-            document.addEventListener('click',(e) => {
+            document.addEventListener('click', (e) => {
                 const target = e.target;
                 if (target.closest('[data-create-modal-task]')) {
                     this.createModal();
@@ -192,16 +193,16 @@ document.addEventListener('DOMContentLoaded', () => {
             this.changed(false);
         }
 
-        async editTask(data,modal,form,key) {
+        async editTask(data, modal, form, key) {
             new Loader(form).createWithWrapper()
-            await this.actionTasks.editTask(data,key);
+            await this.actionTasks.editTask(data, key);
             new Loader(form).hide()
             this.changed();
             modal.close();
         }
 
 
-        async createTask(data,modal,form) {
+        async createTask(data, modal, form) {
             new Loader(form).createWithWrapper()
             await this.actionTasks.createTask(data);
             new Loader(form).hide()
@@ -239,7 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <label class="input-primary mt-2">
                         <input type="text" name="Имя" class="input-reset input-primary__input" value="${dataItem && dataItem.date ? dataItem.date : ''}" data-field-date placeholder="Дата">
                     </label>
-                    <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div class="mt-4 grid grid-cols-2 gap-4 md1:grid-cols-1">
                         <label class="checkbox">
                             <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='today'>
                             <div class="checkbox__checkmark">
@@ -251,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 Сегодня
                             </span>
                         </label>
-                        <label class="checkbox">
+                        <label class="checkbox order-1">
                             <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='year'>
                             <div class="checkbox__checkmark">
                                 <svg>
@@ -297,19 +298,23 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             const modal = new dynamicModal(modalContentHTML, '.edit-task', {
                 isOpen(modal) {
+                    setTimeout(() => {
+                        textareaPrimary(modal.modal.querySelector('[data-field-descr]').parentElement)
+                    }, 300);
                 }
             });
 
             const form = modal.modal.querySelector('.create-task');
             const checkboxes = form.querySelectorAll('[data-checkbox-date]');
             const date = form.querySelector('[data-field-date]');
-            datePicker(date.parentElement,date);
             const name = form.querySelector('[data-field-name]');
             const descr = form.querySelector('[data-field-descr]');
 
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', checkboxHandler);
-            })
+            datePicker(date.parentElement, date);
+
+
+            checkboxes.forEach(checkbox => checkbox.addEventListener('change', checkboxHandler))
+
             function checkboxHandler() {
                 const name = this.dataset.checkboxDate;
 
@@ -342,9 +347,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     date: date.value || null
                 }
                 if (key) {
-                    this.editTask(data,modal,form,key);
+                    this.editTask(data, modal, form, key);
                 } else {
-                    this.createTask(data,modal,form);
+                    this.createTask(data, modal, form);
                 }
             })
 
@@ -373,7 +378,7 @@ class ActionTasks {
             console.log(error);
         }
     }
-    async editTask(post,key) {
+    async editTask(post, key) {
         try {
             const request = new Request(`${this.url}/tasks/${key}.json`, {
                 method: 'Put',

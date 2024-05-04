@@ -3,7 +3,7 @@ export const textareaPrimary = (el) => {
     const field = el.querySelector('.textarea-primary__textarea');
     const fieldMinHeight = el.dataset.textareaMinHeight;
 
-    el.style.height = `${fieldMinHeight}px`;
+    changeHeight();
     field.addEventListener('input', changeHeight);
 
     function changeHeight() {

@@ -52,17 +52,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 
 /***/ }),
 
-/***/ "./src/js/functions/textarea.js":
-/*!**************************************!*\
-  !*** ./src/js/functions/textarea.js ***!
-  \**************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   textareaPrimary: () => (/* binding */ textareaPrimary)\n/* harmony export */ });\nconst textareaPrimary = (el) => {\r\n    if (!el) return;\r\n    const field = el.querySelector('.textarea-primary__textarea');\r\n    const fieldMinHeight = el.dataset.textareaMinHeight;\r\n\r\n    el.style.height = `${fieldMinHeight}px`;\r\n    field.addEventListener('input', changeHeight);\r\n\r\n    function changeHeight() {\r\n        el.style.height = `${fieldMinHeight}px`;\r\n        el.style.height = `${field.scrollHeight + 2}px`;\r\n    }\r\n}\n\n//# sourceURL=webpack://gulp-builder/./src/js/functions/textarea.js?");
-
-/***/ }),
-
 /***/ "./src/js/functions/throttle.js":
 /*!**************************************!*\
   !*** ./src/js/functions/throttle.js ***!
@@ -92,7 +81,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var focus_visible__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! focus-visible */ \"./node_modules/focus-visible/dist/focus-visible.js\");\n/* harmony import */ var _functions_fix_fullheight_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./functions/fix-fullheight.js */ \"./src/js/functions/fix-fullheight.js\");\n/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_settings.js */ \"./src/js/_settings.js\");\n/* harmony import */ var _functions_tabs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./functions/tabs.js */ \"./src/js/functions/tabs.js\");\n/* harmony import */ var _functions_tooltip_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./functions/tooltip.js */ \"./src/js/functions/tooltip.js\");\n/* harmony import */ var _functions_textarea_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./functions/textarea.js */ \"./src/js/functions/textarea.js\");\n\n\n\n\n\n\n\n\n\ndocument.addEventListener('DOMContentLoaded', () => {\n    document.addEventListener('click', (e) => {\n        const target = e.target;\n    })\n\n    const tabs = document.querySelectorAll('[data-tabs]');\n    tabs.forEach(tab => (0,_functions_tabs_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(tab));\n\n\n    document.querySelectorAll('.textarea-primary').forEach(item => (0,_functions_textarea_js__WEBPACK_IMPORTED_MODULE_5__.textareaPrimary)(item));\n\n    const tooltipHtml = new _functions_tooltip_js__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({\n        mode: 'html',\n        gap: 10,\n        targetSelector: '[data-tooltip-html]',\n        elementSelector: 'tooltip-html',\n        positionY: 'bottom',\n        positionX: 'center',\n        animation: {\n            type: 'fade',\n            speed: 300,\n        },\n    });\n});\n\n//# sourceURL=webpack://gulp-builder/./src/js/global.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var focus_visible__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! focus-visible */ \"./node_modules/focus-visible/dist/focus-visible.js\");\n/* harmony import */ var _functions_fix_fullheight_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./functions/fix-fullheight.js */ \"./src/js/functions/fix-fullheight.js\");\n/* harmony import */ var _settings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_settings.js */ \"./src/js/_settings.js\");\n/* harmony import */ var _functions_tabs_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./functions/tabs.js */ \"./src/js/functions/tabs.js\");\n/* harmony import */ var _functions_tooltip_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./functions/tooltip.js */ \"./src/js/functions/tooltip.js\");\n\n\n\n\n\n\n\n\ndocument.addEventListener('DOMContentLoaded', () => {\n    document.addEventListener('click', (e) => {\n        const target = e.target;\n    })\n\n    const tabs = document.querySelectorAll('[data-tabs]');\n    tabs.forEach(tab => (0,_functions_tabs_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(tab));\n\n    const tooltipHtml = new _functions_tooltip_js__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({\n        mode: 'html',\n        gap: 10,\n        targetSelector: '[data-tooltip-html]',\n        elementSelector: 'tooltip-html',\n        positionY: 'bottom',\n        positionX: 'center',\n        animation: {\n            type: 'fade',\n            speed: 300,\n        },\n    });\n});\n\n//# sourceURL=webpack://gulp-builder/./src/js/global.js?");
 
 /***/ }),
 
