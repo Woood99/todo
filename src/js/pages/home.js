@@ -12,16 +12,14 @@ import {
 } from "../modules/date.js";
 
 import dynamicModal from "../modules/dynamicModal.js";
-
+import datePicker from '../modules/datePicker.js'
 
 document.addEventListener('DOMContentLoaded', () => {
-    const modalContainer = document.querySelector('.modal-container');
     class Todo {
         constructor() {
             this.tabs = document.querySelector('[data-todo-tabs]').wdTab;
             if (!this.tabs) return;
             this.tabsEl = this.tabs.container;
-            this.createTaskEl = document.querySelector('.create-task');
             this.actionTasks = new ActionTasks();
             this.init();
 
@@ -39,9 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
         init() {
             this.changed();
             this.tabsEl.addEventListener('tabChange', this.changed.bind(this));
-            this.newTask();
             this.tabsEl.addEventListener('click', this.deleteTask.bind(this));
-            this.tabsEl.addEventListener('click', this.editTask.bind(this));
+            document.addEventListener('click',(e) => {
+                const target = e.target;
+                if (target.closest('[data-create-modal-task]')) {
+                    this.createModal();
+                }
+                if (target.closest('[data-edit-modal-task]')) {
+                    this.createModal(target.closest('[data-card-id]') ? target.closest('[data-card-id]').dataset.cardId : null);
+                }
+            });
         }
 
 
@@ -129,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!nameTab) return;
                 todoPanel.innerHTML = `
                     <span class="text-center block mt-[40px] text-2xl">${this.textStub[nameTab]}</span>
-                    <button type="button" class="btn btn-reset ml-auto mr-auto mt-6 btn-primary" data-modal-path="create-task">
+                    <button type="button" class="btn btn-reset ml-auto mr-auto mt-6 btn-primary" data-create-modal-task>
                         <span class="btn-primary__text">
                             Добавить задачу
                         </span>
@@ -152,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="flex items-center justify-between md1:flex-col md1:items-start md1:gap-4">
                             <div class="flex-grow max-w-[80%] text-gray-500 whitespace-pre-wrap md1:max-w-full">${item.descr}</div>
                             <div class="flex items-center gap-4 self-end">
-                                <button type="button" data-tooltip-html="Редактировать задачу" data-tooltip-desktop data-button-edit-task>
+                                <button type="button" data-tooltip-html="Редактировать задачу" data-tooltip-desktop data-edit-modal-task>
                                     <svg class="w-6 h-6 pointer-events-none" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg" xml:space="preserve" fill="none"><path d="m104.175 90.97-4.252 38.384 38.383-4.252L247.923 15.427V2.497L226.78-18.646h-12.93zm98.164-96.96 31.671 31.67" class="cls-1" style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#5478e6;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1" transform="translate(-77.923 40.646)"/><path d="m195.656 33.271-52.882 52.882" style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#5478e6;stroke-width:12;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:5;   stroke-dasharray:none;stroke-opacity:1" transform="translate(-77.923 40.646)"/></svg>                     
                                 </button>
                                 <button type="button" data-tooltip-html="Удалить задачу" data-tooltip-desktop data-button-delete-task>
@@ -187,12 +192,34 @@ document.addEventListener('DOMContentLoaded', () => {
             this.changed(false);
         }
 
-        async editTask(e) {
-            const target = e.target;
-            const button = target.closest('[data-button-edit-task]');
-            if (!button) return;
-            this.deleteTooltips();
+        async editTask(data,modal,form,key) {
+            new Loader(form).createWithWrapper()
+            await this.actionTasks.editTask(data,key);
+            new Loader(form).hide()
+            this.changed();
+            modal.close();
+        }
 
+
+        async createTask(data,modal,form) {
+            new Loader(form).createWithWrapper()
+            await this.actionTasks.createTask(data);
+            new Loader(form).hide()
+            this.changed();
+            modal.close();
+        }
+
+        getContainerFromInput(el) {
+            return el.closest('.input-primary');
+        }
+
+        deleteTooltips() {
+            document.querySelectorAll('.tooltip-html').forEach(item => item.remove());
+        }
+
+
+        async createModal(key) {
+            const dataItem = key ? await this.actionTasks.fetchTaskById(key) : null;
             const modalContentHTML = `
             <div class="modal edit-task _center">
                 <div class="modal__container edit-task__container">
@@ -202,33 +229,87 @@ document.addEventListener('DOMContentLoaded', () => {
                         </svg>
                     </button>
                     <div class="modal__content edit-task__content">
-                        123
+                    <form action="#" class="create-task">
+                    <label class="input-primary">
+                        <input type="text" name="Имя" class="input-reset input-primary__input" value="${dataItem && dataItem.name !== 'Без названия' ? dataItem.name : ''}" data-field-name placeholder="Название">
+                    </label>
+                    <div class="textarea-primary mt-2 md1:max-h-[285px]" data-textarea-min-height='80'>
+                        <textarea class="input-reset textarea-primary__textarea" maxlength='1000' data-field-descr placeholder="Описание">${dataItem && dataItem.descr ? dataItem.descr : ''}</textarea>
+                    </div>
+                    <label class="input-primary mt-2">
+                        <input type="text" name="Имя" class="input-reset input-primary__input" value="${dataItem && dataItem.date ? dataItem.date : ''}" data-field-date placeholder="Дата">
+                    </label>
+                    <div class="mt-4 grid grid-cols-2 gap-4">
+                        <label class="checkbox">
+                            <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='today'>
+                            <div class="checkbox__checkmark">
+                                <svg>
+                                    <use xlink:href="./img/sprite.svg#check"></use>
+                                </svg>
+                            </div>
+                            <span class="checkbox__content">
+                                Сегодня
+                            </span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='year'>
+                            <div class="checkbox__checkmark">
+                                <svg>
+                                    <use xlink:href="./img/sprite.svg#check"></use>
+                                </svg>
+                            </div>
+                            <span class="checkbox__content">
+                                Год
+                            </span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='tomorrow'>
+                            <div class="checkbox__checkmark">
+                                <svg>
+                                    <use xlink:href="./img/sprite.svg#check"></use>
+                                </svg>
+                            </div>
+                            <span class="checkbox__content">
+                                Завтра
+                            </span>
+                        </label>
+                        <label class="checkbox">
+                            <input type="checkbox" name="checkbox" class="input-reset checkbox__field" data-checkbox-date='all'>
+                            <div class="checkbox__checkmark">
+                                <svg>
+                                    <use xlink:href="./img/sprite.svg#check"></use>
+                                </svg>
+                            </div>
+                            <span class="checkbox__content">
+                                Без ограничений
+                            </span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-reset btn-primary w-full mt-8">
+                        <span class="btn-primary__text">
+                            Сохранить
+                        </span>
+                    </button>
+                    </form>
                     </div>
                 </div>
             </div>
             `;
             const modal = new dynamicModal(modalContentHTML, '.edit-task', {
                 isOpen(modal) {
-                    console.log(modal);
                 }
             });
 
-        }
-
-
-
-        newTask() {
-            const form = this.createTaskEl;
+            const form = modal.modal.querySelector('.create-task');
             const checkboxes = form.querySelectorAll('[data-checkbox-date]');
             const date = form.querySelector('[data-field-date]');
+            datePicker(date.parentElement,date);
             const name = form.querySelector('[data-field-name]');
             const descr = form.querySelector('[data-field-descr]');
 
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', checkboxHandler);
             })
-
-
             function checkboxHandler() {
                 const name = this.dataset.checkboxDate;
 
@@ -253,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     date.removeAttribute('disabled');
                 }
             }
-
             form.addEventListener('submit', (e) => {
                 e.preventDefault();
                 const data = {
@@ -261,24 +341,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     descr: descr.value || '',
                     date: date.value || null
                 }
-                this.createTask(data);
+                if (key) {
+                    this.editTask(data,modal,form,key);
+                } else {
+                    this.createTask(data,modal,form);
+                }
             })
-        }
 
-        async createTask(data) {
-            new Loader(this.createTaskEl).createWithWrapper()
-            await this.actionTasks.createTask(data);
-            new Loader(this.createTaskEl).hide()
-            modalContainer.modal.close('create-task');
-            this.changed();
-        }
-
-        getContainerFromInput(el) {
-            return el.closest('.input-primary');
-        }
-
-        deleteTooltips() {
-            document.querySelectorAll('.tooltip-html').forEach(item => item.remove());
+            return modal;
         }
 
     }
@@ -303,10 +373,32 @@ class ActionTasks {
             console.log(error);
         }
     }
+    async editTask(post,key) {
+        try {
+            const request = new Request(`${this.url}/tasks/${key}.json`, {
+                method: 'Put',
+                body: JSON.stringify(post)
+            });
+            return this.useRequest(request);
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     async fetchTasks() {
         try {
             const request = new Request(`${this.url}/tasks.json`, {
+                method: 'get'
+            });
+            return this.useRequest(request);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    async fetchTaskById(id) {
+        try {
+            const request = new Request(`${this.url}/tasks/${id}.json`, {
                 method: 'get'
             });
             return this.useRequest(request);
