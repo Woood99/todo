@@ -1,75 +1,68 @@
 <!DOCTYPE html>
 <html lang="ru" class="page">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<meta name="theme-color" content="#111111" />
+		<title>Главная</title>
+		<!-- <link rel="preload" href="fonts/MullerRegular.woff2" as="font" type="font/woff2" crossorigin> -->
+		<link rel="stylesheet" href="css/vendor.css" />
+		<link rel="stylesheet" href="css/global.css" />
 
-<head>
-    <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="theme-color" content="#111111">
-<title>Главная</title>
-<!-- <link rel="preload" href="fonts/MullerRegular.woff2" as="font" type="font/woff2" crossorigin> -->
-<link rel="stylesheet" href="css/vendor.css">
-<link rel="stylesheet" href="css/global.css">
+		<link rel="stylesheet" href="css/home.css" />
 
-    <link rel="stylesheet" href="css/home.css">
- 
-<script defer src="js/global.js"></script>
+		<script defer src="js/global.js"></script>
 
-    <script defer src="js/home.js"></script>
- 
+		<script defer src="js/home.js"></script>
+	</head>
 
-</head>
+	<body class="page__body">
+		<div class="site-container">
+			<main class="main py-10 md1:py-6">
+				<section>
+					<div class="container">
+						<div class="flex justify-between gap-10 md1:flex-col-reverse md1:gap-5">
+							<h1 class="text-5xl md1:text-3xl">Задачи</h1>
+							<button type="button" class="btn btn-reset ml-auto btn-primary" data-create-modal-task>
+								<span class="btn-primary__text">
+									Добавить задачу
+								</span>
+							</button>
+						</div>
+						<div class="tabs mt-8 md1:mt-5" data-todo-tabs data-tabs data-tabs-one data-tabs-animation="fade">
+							<nav data-tabs-buttons class="tabs__nav pb-4">
+								<button type="button" class="btn btn-reset tabs__button _active" data-tab-name="today">
+									На сегодня
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="tomorrow">
+									На завтра
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="week">
+									На неделю
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="month">
+									На месяц
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="year">
+									На год
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="other">
+									Остальные
+								</button>
+								<button type="button" class="btn btn-reset tabs__button" data-tab-name="all">
+									Все
+								</button>
 
-<body class="page__body">
-    <div class="site-container">
-        <main class="main py-10 md1:py-6">
-            <section>
-                <div class="container">
-                    <div class='flex justify-between gap-10 md1:flex-col-reverse md1:gap-5'>
-                        <h1 class='text-5xl md1:text-3xl'>Задачи</h1>
-                        <button type='button' class='btn btn-reset ml-auto btn-primary' data-create-modal-task>
-                            <span class="btn-primary__text">
-                                Добавить задачу
-                            </span>
-                        </button>
-                    </div>
-                    <div class="tabs mt-8 md1:mt-5" data-todo-tabs data-tabs data-tabs-one data-tabs-animation='fade'>
-                        <nav data-tabs-buttons class="tabs__nav pb-4">
-                            <button type="button" class="btn btn-reset tabs__button _active" data-tab-name="today">
-                                На сегодня
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="tomorrow">
-                                На завтра
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="week">
-                                На неделю
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="month">
-                                На месяц
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="year">
-                                На год
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="other">
-                               Остальные
-                            </button>
-                            <button type="button" class="btn btn-reset tabs__button" data-tab-name="all">
-                                Все
-                            </button>
-
-                            <span data-nav-line class="tabs__line"></span>
-                        </nav>
-                        <div data-tabs-content class="tabs__content">
-                            <div class="tabs__panel">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-</body>
-
-
+								<span data-nav-line class="tabs__line"></span>
+							</nav>
+							<div data-tabs-content class="tabs__content">
+								<div class="tabs__panel"></div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+		</div>
+	</body>
 </html>
